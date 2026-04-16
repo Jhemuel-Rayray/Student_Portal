@@ -2,7 +2,12 @@
 // AUTH.JS — Shared authentication utilities
 // =============================================
 
-const API_BASE = '/api/login';
+/**
+ * FIXED API_BASE: 
+ * Alisin ang '/login' dito para hindi mag-duplicate. 
+ * Relative path na ito para sa deployment.
+ */
+const API_BASE = '/api';
 
 // ---- Token Management ----
 function getToken() { return localStorage.getItem('token'); }
@@ -37,7 +42,16 @@ function logout() {
 // ---- API Helper ----
 async function apiCall(endpoint, options = {}) {
   const token = getToken();
-  const headers = { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options.headers };
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...options.headers
+  };
+
+  /**
+   * Ang endpoint dito ay dapat '/login', '/students', etc.
+   * Bubuo ito ng path na '/api/login'
+   */
   const response = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || 'Request failed');
@@ -76,7 +90,12 @@ function showToast(message, type = 'info') {
   toast.className = `toast ${type}`;
   toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${message}</span>`;
   container.appendChild(toast);
-  setTimeout(() => { toast.style.animation = 'none'; toast.style.opacity = '0'; toast.style.transform = 'translateX(40px)'; toast.style.transition = '0.3s'; setTimeout(() => toast.remove(), 300); }, 3500);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(40px)';
+    toast.style.transition = '0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
 }
 
 // ---- Login Form (index.html only) ----
@@ -98,18 +117,23 @@ if (loginForm) {
 
     errorEl.classList.remove('show');
     btnText.textContent = 'Signing in...';
-    spinner.style.display = 'inline-block';
-    arrow.style.display = 'none';
+    if (spinner) spinner.style.display = 'inline-block';
+    if (arrow) arrow.style.display = 'none';
     btn.disabled = true;
 
     try {
+      /**
+       * Tatawag ito sa '/api/login'
+       */
       const data = await apiCall('/login', {
         method: 'POST',
         body: JSON.stringify({ username, password })
       });
+
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       showToast('Login successful! Redirecting...', 'success');
+
       setTimeout(() => {
         window.location.href = data.user.role === 'admin' ? '/admin.html' : '/dashboard.html';
       }, 800);
@@ -117,15 +141,15 @@ if (loginForm) {
       errorMsg.textContent = err.message || 'Invalid username or password.';
       errorEl.classList.add('show');
       btnText.textContent = 'Sign In';
-      spinner.style.display = 'none';
-      arrow.style.display = 'inline';
+      if (spinner) spinner.style.display = 'none';
+      if (arrow) arrow.style.display = 'inline';
       btn.disabled = false;
     }
   });
 }
 
 // Auto-setup sidebar on all non-login pages
-if (!loginForm) {
+if (!loginForm && window.location.pathname !== '/index.html' && window.location.pathname !== '/') {
   requireAuth();
   setupSidebar();
 }
