@@ -77,6 +77,15 @@ const login = async (req, res) => {
     console.error('Login error:', err);
     res.status(500).json({ success: false, message: 'Server error sa database connection.' });
   }
+
+  // Sa loob ng authController.js, dagdagan mo ito para makita natin sa logs:
+  console.log("Login Attempt:", username);
+  const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+  console.log("User found in DB:", rows.length > 0);
+  if (rows.length > 0) {
+    console.log("Password in DB:", rows[0].password);
+    console.log("Password entered:", password);
+  }
 };
 
 module.exports = { login };
