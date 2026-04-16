@@ -2,11 +2,11 @@
 // AUTH.JS — Shared authentication utilities
 // =============================================
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = '/api/login';
 
 // ---- Token Management ----
 function getToken() { return localStorage.getItem('token'); }
-function getUser()  { return JSON.parse(localStorage.getItem('user') || 'null'); }
+function getUser() { return JSON.parse(localStorage.getItem('user') || 'null'); }
 
 function requireAuth() {
   const token = getToken();
@@ -49,15 +49,15 @@ function setupSidebar() {
   const user = getUser();
   if (!user) return;
 
-  const avatarEl   = document.getElementById('sidebarAvatar');
+  const avatarEl = document.getElementById('sidebarAvatar');
   const usernameEl = document.getElementById('sidebarUsername');
-  const roleEl     = document.getElementById('sidebarRole');
-  const adminNav   = document.getElementById('nav-admin');
+  const roleEl = document.getElementById('sidebarRole');
+  const adminNav = document.getElementById('nav-admin');
 
   const displayName = user.name || user.username;
-  if (avatarEl)   avatarEl.textContent   = displayName.charAt(0).toUpperCase();
+  if (avatarEl) avatarEl.textContent = displayName.charAt(0).toUpperCase();
   if (usernameEl) usernameEl.textContent = displayName;
-  if (roleEl)     roleEl.textContent     = user.role === 'admin' ? 'Administrator' : 'Student';
+  if (roleEl) roleEl.textContent = user.role === 'admin' ? 'Administrator' : 'Student';
   if (adminNav && user.role === 'admin') adminNav.style.display = 'flex';
 }
 
@@ -89,12 +89,12 @@ if (loginForm) {
     e.preventDefault();
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
-    const errorEl  = document.getElementById('loginError');
+    const errorEl = document.getElementById('loginError');
     const errorMsg = document.getElementById('loginErrorMsg');
-    const btnText  = document.getElementById('loginBtnText');
-    const spinner  = document.getElementById('loginSpinner');
-    const arrow    = document.getElementById('loginArrow');
-    const btn      = document.getElementById('loginBtn');
+    const btnText = document.getElementById('loginBtnText');
+    const spinner = document.getElementById('loginSpinner');
+    const arrow = document.getElementById('loginArrow');
+    const btn = document.getElementById('loginBtn');
 
     errorEl.classList.remove('show');
     btnText.textContent = 'Signing in...';
