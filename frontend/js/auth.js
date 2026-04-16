@@ -40,19 +40,17 @@ function logout() {
 }
 
 // ---- API Helper ----
+// Sa auth.js mo, dapat ganito ang apiCall:
 async function apiCall(endpoint, options = {}) {
-  const token = getToken();
+  const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}), // DITO ANG IMPORTANTE
     ...options.headers
   };
 
-  /**
-   * Ang endpoint dito ay dapat '/login', '/students', etc.
-   * Bubuo ito ng path na '/api/login'
-   */
   const response = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+  // ... rest of your code
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || 'Request failed');
   return data;
