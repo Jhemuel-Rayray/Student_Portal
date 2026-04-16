@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Panel — CHCCI (Version 2.0.1) </title>
+  <meta name="description" content="Faculty and Administration panel for the CHCCI Institute Student Portal." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="img/logo.png" alt="Neo-Zenith Logo" class="sidebar-logo-icon"
+          style="background: transparent !important; box-shadow: none !important; border-radius: 0 !important; object-fit: contain;" />
+        <div class="sidebar-logo-text">Neo-Zenith <span>Faculty Panel</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Navigation</span>
+        <a href="dashboard.html" class="nav-item"><i class="fa fa-gauge nav-icon"></i><span
+            class="nav-label">Dashboard</span></a>
+        <a href="grades.html" class="nav-item"><i class="fa fa-star nav-icon"></i><span
+            class="nav-label">Grades</span></a>
+        <a href="schedule.html" class="nav-item"><i class="fa fa-calendar-days nav-icon"></i><span
+            class="nav-label">Schedule</span></a>
+        <a href="announcements.html" class="nav-item"><i class="fa fa-bell nav-icon"></i><span
+            class="nav-label">Announcements</span></a>
+        <span class="nav-section-label">Faculty</span>
+        <a href="profile.html" class="nav-item"><i class="fa fa-id-card nav-icon"></i><span class="nav-label">My
+            Profile</span></a>
+        <a href="admin.html" class="nav-item active"><i class="fa fa-shield-halved nav-icon"></i><span
+            class="nav-label">Faculty Panel</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="logout()">
+          <div class="sidebar-avatar" id="sidebarAvatar">A</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUsername">Admin</div>
+            <div class="sidebar-user-role" id="sidebarRole">Administrator</div>
+          </div>
+          <i class="fa fa-right-from-bracket text-muted" style="font-size:14px"></i>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="flex items-center gap-12">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+          <div class="topbar-left">
+            <div class="topbar-title">Faculty Panel</div>
+            <div class="topbar-breadcrumb">Institutional Intelligence & Student Management System</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-btn"><i class="fa fa-bell"></i><span class="notif-dot"></span></div>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- Tabs -->
+        <div class="admin-tabs" id="adminTabs">
+          <div class="admin-tab active" data-tab="students" onclick="switchTab('students')">
+            <i class="fa fa-users"></i> Students
+          </div>
+          <div class="admin-tab" data-tab="grades" onclick="switchTab('grades')">
+            <i class="fa fa-star"></i> Grades
+          </div>
+          <div class="admin-tab" data-tab="schedules" onclick="switchTab('schedules')">
+            <i class="fa fa-calendar-days"></i> Schedules
+          </div>
+          <div class="admin-tab" data-tab="announcements" onclick="switchTab('announcements')">
+            <i class="fa fa-bell"></i> Announcements
+          </div>
+          <div class="admin-tab" data-tab="support" onclick="switchTab('support')">
+            <i class="fa fa-headset"></i> Student Support
+          </div>
+        </div>
+
+        <!-- STUDENTS TAB -->
+        <div id="tab-students" class="tab-content fade-in">
+          <!-- Filters -->
+          <div class="glass-card stagger-children" style="margin-bottom: 24px">
+            <div class="card-body"
+              style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; padding: 16px 24px">
+              <div
+                style="font-weight: 700; font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em">
+                <i class="fa fa-filter" style="color: var(--neon-blue); margin-right: 4px"></i> Advanced Filters
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="form-label" style="margin: 0;">Course:</span>
+                <select id="filterCourse" class="form-select"
+                  style="width: 140px; padding: 0 12px; font-size: 13px; height: 36px;" onchange="filterStudents()">
+                  <option value="">All</option>
+                  <option value="BSCS">BSCS</option>
+                  <option value="BSIT">BSIT</option>
+                  <option value="BSHM">BSHM</option>
+                </select>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="form-label" style="margin: 0;">Year:</span>
+                <select id="filterYear" class="form-select"
+                  style="width: 120px; padding: 0 12px; font-size: 13px; height: 36px;" onchange="filterStudents()">
+                  <option value="">All</option>
+                  <option value="1">Year 1</option>
+                  <option value="2">Year 2</option>
+                  <option value="3">Year 3</option>
+                  <option value="4">Year 4</option>
+                </select>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="form-label" style="margin: 0;">Section:</span>
+                <select id="filterSection" class="form-select"
+                  style="width: 120px; padding: 0 12px; font-size: 13px; height: 36px;" onchange="filterStudents()">
+                  <option value="">All</option>
+                  <option value="A">Section A</option>
+                  <option value="B">Section B</option>
+                </select>
+              </div>
+              <div style="margin-left: auto; font-size: 12px; color: var(--text-muted)" id="filterCount">Showing all
+                students</div>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-header">
+              <div class="card-title">
+                <div class="card-title-icon" style="background:rgba(14,165,233,0.12);color:var(--neon-blue)">👥</div>
+                Student Registry
+              </div>
+              <<div class="flex gap-8">
+                <button class="btn btn-danger btn-sm" onclick="handleDeleteAllStudents()"
+                  style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);">
+                  <i class="fa fa-trash-can"></i> Delete All
+                </button>
+
+                <button class="btn btn-violet btn-sm" onclick="openModal('bulkModal')">
+                  <i class="fa fa-file-excel"></i> Bulk Upload
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="openModal('studentModal')">
+                  <i class="fa fa-plus"></i> Add Student
+                </button>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="glass-table-wrapper">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                    <th>Section</th>
+                    <th>Username</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                  <tr>
+                    <td colspan="7" style="text-align:center;padding:40px"><span class="spinner"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- GRADES TAB -->
+    <div id="tab-grades" class="tab-content fade-in" style="display:none">
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon" style="background:rgba(124,58,237,0.12);color:#a78bfa">⭐</div> Manage Grades
+          </div>
+          <div class="flex gap-8">
+            <select id="gradeStudentFilter" class="form-select"
+              style="width: 220px; height: 36px; padding: 4px 12px; font-size: 13px;" onchange="loadAdminGrades()">
+              <option value="">Select Student...</option>
+            </select>
+            <button class="btn btn-primary btn-sm" style="flex-shrink: 0; white-space: nowrap;"
+              onclick="openModal('gradeModal')">
+              <i class="fa fa-plus"></i> Add Grade
+            </button>
+          </div>
+        </div>
+        <div class="card-body" style="padding-top:8px">
+          <div class="glass-table-wrapper">
+            <table class="glass-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student</th>
+                  <th>Subject</th>
+                  <th>Grade</th>
+                  <th>Semester</th>
+                  <th>School Year</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="gradesAdminTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">Select a student to
+                    view grades</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCHEDULES TAB -->
+    <div id="tab-schedules" class="tab-content fade-in" style="display:none">
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon" style="background:rgba(6,255,212,0.12);color:var(--neon-cyan)">📅</div> Manage
+            Schedules
+          </div>
+          <div class="flex gap-8">
+            <select id="schedStudentFilter" class="form-select"
+              style="width: 220px; height: 36px; padding: 4px 12px; font-size: 13px;" onchange="loadAdminSchedules()">
+              <option value="">Select Student...</option>
+            </select>
+            <button class="btn btn-primary btn-sm" style="flex-shrink: 0; white-space: nowrap;"
+              onclick="openModal('scheduleModal')">
+              <i class="fa fa-plus"></i> Add Schedule
+            </button>
+          </div>
+        </div>
+        <div class="card-body" style="padding-top:8px">
+          <div class="glass-table-wrapper">
+            <table class="glass-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student</th>
+                  <th>Subject</th>
+                  <th>Day</th>
+                  <th>Time</th>
+                  <th>Room</th>
+                  <th>Instructor</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="schedulesAdminTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">Select a student to
+                    view schedules</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS TAB -->
+    <div id="tab-announcements" class="tab-content fade-in" style="display:none">
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon" style="background:rgba(240,0,184,0.12);color:var(--neon-pink)">📣</div> Manage
+            Announcements
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('announcementModal')">
+            <i class="fa fa-plus"></i> New Announcement
+          </button>
+        </div>
+        <div class="card-body" style="padding-top:8px">
+          <div class="glass-table-wrapper">
+            <table class="glass-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="announcementsAdminTableBody">
+                <tr>
+                  <td colspan="5" style="text-align:center;padding:40px"><span class="spinner"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT TAB -->
+    <div id="tab-support" class="tab-content fade-in" style="display:none">
+      <div class="glass-grid" style="display:grid; grid-template-columns: 320px 1fr; gap: 24px">
+        <div class="glass-card" style="height: 650px; display: flex; flex-direction: column">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(14,165,233,0.12);color:var(--neon-blue)">📬</div>
+              Student Inquiries
+            </div>
+          </div>
+          <div class="card-body" id="chatUserList" style="flex: 1; overflow-y: auto; padding: 12px">
+            <div class="text-muted" style="text-align:center; padding: 20px">No signals found.</div>
+          </div>
+        </div>
+        <div class="glass-card" style="height: 650px; display: flex; flex-direction: column">
+          <div class="card-header" id="chatHeader" style="border-bottom: 1px solid var(--glass-border)">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(240,0,184,0.12);color:var(--neon-pink)">💬</div>
+              Neural Communication Link
+            </div>
+          </div>
+          <div class="card-body" id="chatMessages"
+            style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 24px;">
+            <div class="empty-state" style="margin: auto">
+              <div class="empty-state-icon">💬</div>
+              <div class="empty-state-text">Select a student thread to begin support</div>
+            </div>
+          </div>
+          <div class="card-footer" id="chatInputArea"
+            style="display: none; padding: 20px; border-top: 1px solid var(--glass-border)">
+            <div class="flex gap-12" style="width: 100%">
+              <input type="text" id="chatInput" class="form-input" placeholder="Type response..."
+                onkeypress="if(event.key==='Enter') sendFacultyMessage()" />
+              <button class="btn btn-primary" onclick="sendFacultyMessage()"><i class="fa fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+  </div>
+  </div>
+
+  <!-- Bulk Upload Modal -->
+  <div class="modal-overlay" id="bulkModal">
+    <div class="modal" style="max-width:450px">
+      <div class="modal-header">
+        <div class="modal-title">Bulk Student Upload</div>
+        <button class="modal-close" onclick="closeModal('bulkModal')"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info"
+          style="margin-bottom:16px; font-size:13px; line-height:1.5; background:rgba(0,212,255,0.05); border:1px solid rgba(0,212,255,0.2); padding:12px; border-radius:8px; color:var(--text-secondary)">
+          <i class="fa fa-circle-info" style="color:var(--neon-blue)"></i>
+          Upload an Excel file (.xlsx) with these headers:<br />
+          <strong>Student Number, Full Name, Course, Year, Section, Email, Phone, Address</strong><br />
+          <em>* Student Number will be used as the default username and password.</em>
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="display:flex; justify-content:space-between">
+            Select Excel File
+            <a href="#" onclick="downloadTemplate()"
+              style="color:var(--neon-cyan); font-size:11px; text-decoration:none">Download Template</a>
+          </label>
+          <div class="file-upload-wrapper"
+            style="border:2px dashed rgba(255,255,255,0.1); border-radius:12px; padding:30px; text-align:center; transition:var(--transition); cursor:pointer"
+            onclick="document.getElementById('xlsxFile').click()">
+            <i class="fa fa-cloud-arrow-up"
+              style="display:block; font-size:32px; margin-bottom:12px; color:var(--text-muted)"></i>
+            <span id="fileNameDisplay" style="color:var(--text-secondary); font-size:13px">Click to browse or drag and
+              drop</span>
+            <input type="file" id="xlsxFile" accept=".xlsx, .xls, .csv" style="display:none"
+              onchange="handleFileChange(event)" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('bulkModal')">Cancel</button>
+        <button class="btn btn-primary" id="processBulkBtn" onclick="processBulkUpload()" disabled>
+          <i class="fa fa-upload"></i> Process Upload
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Modal -->
+  <div class="modal-overlay" id="studentModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="studentModalTitle">Add Student</div>
+        <button class="modal-close" onclick="closeModal('studentModal')"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="studentEditId" />
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input id="sName" type="text" class="form-input" placeholder="e.g. Juan Dela Cruz" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Username *</label>
+            <input id="sUsername" type="text" class="form-input" placeholder="e.g. juan.dela.cruz" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password *</label>
+            <input id="sPassword" type="password" class="form-input" placeholder="Leave blank to keep existing" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Course</label>
+            <input id="sCourse" type="text" class="form-input" placeholder="e.g. BSIT" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year Level</label>
+            <select id="sYear" class="form-select">
+              <option value="">Select year</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Section</label>
+            <input id="sSection" type="text" class="form-input" placeholder="e.g. A" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input id="sEmail" type="email" class="form-input" placeholder="student@school.edu" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input id="sPhone" type="text" class="form-input" placeholder="09XXXXXXXXX" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <textarea id="sAddress" class="form-textarea" placeholder="Student's complete address" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('studentModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveStudent()"><i class="fa fa-floppy-disk"></i> Save Student</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grade Modal -->
+  <div class="modal-overlay" id="gradeModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="gradeModalTitle">Add Grade</div>
+        <button class="modal-close" onclick="closeModal('gradeModal')"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="gradeEditId" />
+        <div class="form-group">
+          <label class="form-label">Student *</label>
+          <select id="gStudentId" class="form-select"></select>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Subject *</label>
+            <input id="gSubject" type="text" class="form-input" placeholder="e.g. Data Structures" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Grade *</label>
+            <input id="gGrade" type="number" step="0.01" min="1" max="5" class="form-input" placeholder="e.g. 1.25" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Semester</label>
+            <select id="gSemester" class="form-select">
+              <option value="1st Semester">1st Semester</option>
+              <option value="2nd Semester">2nd Semester</option>
+              <option value="Summer">Summer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">School Year</label>
+            <input id="gSchoolYear" type="text" class="form-input" placeholder="e.g. 2024-2025" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('gradeModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveGrade()"><i class="fa fa-floppy-disk"></i> Save Grade</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Modal -->
+  <div class="modal-overlay" id="scheduleModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="scheduleModalTitle">Add Schedule</div>
+        <button class="modal-close" onclick="closeModal('scheduleModal')"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="scheduleEditId" />
+        <div class="form-group">
+          <label class="form-label">Student *</label>
+          <select id="scStudentId" class="form-select"></select>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Subject *</label>
+            <input id="scSubject" type="text" class="form-input" placeholder="e.g. Web Development" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Day *</label>
+            <select id="scDay" class="form-select">
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time</label>
+            <input id="scTime" type="text" class="form-input" placeholder="e.g. 7:30 AM - 9:00 AM" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Room</label>
+            <input id="scRoom" type="text" class="form-input" placeholder="e.g. Room 301" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Instructor</label>
+            <input id="scInstructor" type="text" class="form-input" placeholder="e.g. Prof. Santos" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('scheduleModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSchedule()"><i class="fa fa-floppy-disk"></i> Save
+          Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcement Modal -->
+  <div class="modal-overlay" id="announcementModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="announcementModalTitle">New Announcement</div>
+        <button class="modal-close" onclick="closeModal('announcementModal')"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="announcementEditId" />
+        <div class="form-group">
+          <label class="form-label">Title *</label>
+          <input id="aTitle" type="text" class="form-input" placeholder="Announcement title" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="aCategory" class="form-select">
+            <option value="General">General</option>
+            <option value="Academic">Academic</option>
+            <option value="Examination">Examination</option>
+            <option value="Financial">Financial</option>
+            <option value="Events">Events</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Content *</label>
+          <textarea id="aContent" class="form-textarea" placeholder="Write your announcement here..."
+            rows="5"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('announcementModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveAnnouncement()"><i class="fa fa-floppy-disk"></i> Publish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-header">
+        <div class="modal-title" style="color:#ff6b6b"><i class="fa fa-triangle-exclamation"></i> Confirm Delete</div>
+        <button class="modal-close" onclick="closeModal('confirmModal')"><i class="fa fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary" id="confirmMessage">Are you sure you want to delete this item? This action cannot be
+          undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+
+</html>

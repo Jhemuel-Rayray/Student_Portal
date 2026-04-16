@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grades — Student Portal</title>
+  <meta name="description" content="View your academic grades for all subjects this semester." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="img/logo.png" alt="Neo-Zenith Logo" class="sidebar-logo-icon" style="background: transparent !important; box-shadow: none !important; border-radius: 0 !important; object-fit: contain;" />
+        <div class="sidebar-logo-text">Neo-Zenith <span>Institute</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Navigation</span>
+        <a href="dashboard.html" class="nav-item">
+          <i class="fa fa-gauge nav-icon"></i><span class="nav-label">Dashboard</span>
+        </a>
+        <a href="grades.html" class="nav-item active">
+          <i class="fa fa-star nav-icon"></i><span class="nav-label">Grades</span>
+        </a>
+        <a href="schedule.html" class="nav-item">
+          <i class="fa fa-calendar-days nav-icon"></i><span class="nav-label">Schedule</span>
+        </a>
+        <a href="announcements.html" class="nav-item">
+          <i class="fa fa-bell nav-icon"></i><span class="nav-label">Announcements</span>
+        </a>
+        <span class="nav-section-label">Faculty</span>
+        <a href="profile.html" class="nav-item">
+          <i class="fa fa-id-card nav-icon"></i><span class="nav-label">My Profile</span>
+        </a>
+        <a href="admin.html" class="nav-item" id="nav-admin" style="display:none">
+          <i class="fa fa-shield-halved nav-icon"></i><span class="nav-label">Faculty Panel</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="logout()">
+          <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUsername">Loading...</div>
+            <div class="sidebar-user-role" id="sidebarRole">Student</div>
+          </div>
+          <i class="fa fa-right-from-bracket text-muted" style="font-size:14px"></i>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="flex items-center gap-12">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+          <div class="topbar-left">
+            <div class="topbar-title">Grades</div>
+            <div class="topbar-breadcrumb">Academic Performance</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-btn"><i class="fa fa-bell"></i><span class="notif-dot"></span></div>
+          <a href="profile.html" class="topbar-btn"><i class="fa fa-user"></i></a>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- GPA Summary Cards -->
+        <div class="stat-grid stagger-children" id="gradeStats">
+          <div class="stat-card blue">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value" id="gpaValue">—</div>
+            <div class="stat-label">Overall GPA</div>
+            <div class="stat-sub" id="gpaRemark">Computing...</div>
+          </div>
+          <div class="stat-card violet">
+            <div class="stat-icon">📚</div>
+            <div class="stat-value" id="subjectCount">—</div>
+            <div class="stat-label">Total Subjects</div>
+          </div>
+          <div class="stat-card cyan">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-value" id="highestGrade">—</div>
+            <div class="stat-label">Best Grade</div>
+            <div class="stat-sub" id="highestSubject">—</div>
+          </div>
+          <div class="stat-card pink">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value" id="lowestGrade">—</div>
+            <div class="stat-label">Lowest Grade</div>
+            <div class="stat-sub" id="lowestSubject">—</div>
+          </div>
+        </div>
+
+        <!-- Grades Table -->
+        <div class="glass-card fade-in">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(0,212,255,0.12);color:var(--neon-blue)">📋</div>
+              Grade Report
+            </div>
+            <div class="flex gap-8">
+              <select id="semesterFilter" class="form-select" style="height:36px;padding:4px 12px;font-size:13px">
+                <option value="">All Semesters</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="glass-table-wrapper">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Subject</th>
+                    <th>Semester</th>
+                    <th>School Year</th>
+                    <th>Grade</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody id="gradesTableBody">
+                  <tr><td colspan="6" style="text-align:center;padding:40px"><span class="spinner"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/grades.js"></script>
+  <script src="js/support-widget.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedule — Student Portal</title>
+  <meta name="description" content="View your weekly class schedule organized by day and time." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="img/logo.png" alt="Neo-Zenith Logo" class="sidebar-logo-icon" style="background: transparent !important; box-shadow: none !important; border-radius: 0 !important; object-fit: contain;" />
+        <div class="sidebar-logo-text">Neo-Zenith <span>Institute</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Navigation</span>
+        <a href="dashboard.html" class="nav-item"><i class="fa fa-gauge nav-icon"></i><span class="nav-label">Dashboard</span></a>
+        <a href="grades.html" class="nav-item"><i class="fa fa-star nav-icon"></i><span class="nav-label">Grades</span></a>
+        <a href="schedule.html" class="nav-item active"><i class="fa fa-calendar-days nav-icon"></i><span class="nav-label">Schedule</span></a>
+        <a href="announcements.html" class="nav-item"><i class="fa fa-bell nav-icon"></i><span class="nav-label">Announcements</span></a>
+        <span class="nav-section-label">Faculty</span>
+        <a href="profile.html" class="nav-item"><i class="fa fa-id-card nav-icon"></i><span class="nav-label">My Profile</span></a>
+        <a href="admin.html" class="nav-item" id="nav-admin" style="display:none"><i class="fa fa-shield-halved nav-icon"></i><span class="nav-label">Faculty Panel</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="logout()">
+          <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUsername">Loading...</div>
+            <div class="sidebar-user-role" id="sidebarRole">Student</div>
+          </div>
+          <i class="fa fa-right-from-bracket text-muted" style="font-size:14px"></i>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="flex items-center gap-12">
+          <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+          <div class="topbar-left">
+            <div class="topbar-title">Class Schedule</div>
+            <div class="topbar-breadcrumb">Weekly Timeline View</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-btn"><i class="fa fa-bell"></i><span class="notif-dot"></span></div>
+          <a href="profile.html" class="topbar-btn"><i class="fa fa-user"></i></a>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- Day Nav -->
+        <div class="glass-card fade-in">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(6,255,212,0.12);color:var(--neon-cyan)">📅</div>
+              Weekly Schedule
+            </div>
+            <div id="currentDayLabel" class="badge badge-cyan"></div>
+          </div>
+          <div class="card-body">
+            <div class="schedule-grid stagger-children" id="scheduleGrid">
+              <div class="empty-state"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule List Table -->
+        <div class="glass-card fade-in" style="animation-delay:0.2s">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-icon" style="background:rgba(124,58,237,0.12);color:#a78bfa">🗒️</div>
+              Full Schedule List
+            </div>
+          </div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="glass-table-wrapper">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Day</th>
+                    <th>Time</th>
+                    <th>Room</th>
+                    <th>Instructor</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                  <tr><td colspan="5" style="text-align:center;padding:40px"><span class="spinner"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/auth.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/support-widget.js"></script>
+</body>
+</html>

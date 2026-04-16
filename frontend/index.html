@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal — Anti-Gravity</title>
+  <meta name="description"
+    content="Sign in to your Student Portal and access grades, schedules, announcements, and more." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="login-bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <main class="login-page">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="img/logo.png" alt="Neo-Zenith Logo" class="login-logo-icon"
+          style="background: transparent !important; box-shadow: none !important; border-radius: 0 !important; object-fit: contain;" />
+        <div class="login-logo-text">CHCCI (Version 2.0.1) <span>Institute</span></div>
+      </div>
+
+      <h1 class="login-heading">Welcome Back</h1>
+      <p class="login-subheading">Enter your credentials to access the portal</p>
+
+      <div id="loginError" class="login-error">
+        <i class="fa fa-circle-exclamation"></i>
+        <span id="loginErrorMsg">Invalid username or password.</span>
+      </div>
+
+      <form id="loginForm" class="login-form" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <div class="input-with-icon">
+            <i class="fa fa-user input-icon"></i>
+            <input id="username" type="text" class="form-input" placeholder="Enter your username" required
+              autocomplete="username" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-with-icon">
+            <i class="fa fa-lock input-icon"></i>
+            <input id="password" type="password" class="form-input" placeholder="Enter your password" required
+              autocomplete="current-password" />
+          </div>
+        </div>
+
+        <button type="submit" id="loginBtn" class="btn-login">
+          <span id="loginBtnText">Sign In</span>
+          <span id="loginSpinner" style="display:none"><span class="spinner"
+              style="width:18px;height:18px;border-width:2px"></span></span>
+          <i id="loginArrow" class="fa fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="js/auth.js"></script>
+</body>
+
+</html>
