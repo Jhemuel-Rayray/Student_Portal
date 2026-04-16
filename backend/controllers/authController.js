@@ -6,6 +6,9 @@ require('dotenv').config();
 const login = async (req, res) => {
   const { username, password } = req.body;
 
+  // Debug: Makikita mo ito sa Render Logs
+  console.log(`\n--- Login Attempt: ${username} ---`);
+
   if (!username || !password) {
     return res.status(400).json({ success: false, message: 'Username and password are required.' });
   }
@@ -15,29 +18,34 @@ const login = async (req, res) => {
     const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
 
     if (rows.length === 0) {
+      console.log(`❌ User [${username}] not found in database.`);
       return res.status(401).json({ success: false, message: 'Invalid credentials.' });
     }
 
     const user = rows[0];
+    console.log(`✅ User found. Role: ${user.role}`);
 
-    /**
-     * 2. Password Verification
-     * Babala: Kung ang password sa DB ay plain text (gaya ng in-insert natin kanina),
-     * mag-e-error ang bcrypt.compare. 
-     * Heto ang logic para tanggapin ang plain text O hashed password habang nag-te-test:
-     */
+    // 2. Password Verification
     let isMatch = false;
+
+    // Debug logs para sa password (ingat lang sa production, pero okay ito habang dev)
+    console.log(`DB Password: ${user.password}`);
+    console.log(`Entered Password: ${password}`);
+
     if (user.password.startsWith('$2')) {
-      // Hashed password ang nasa DB
+      console.log("System detected Bcrypt hash. Comparing...");
       isMatch = await bcrypt.compare(password, user.password);
     } else {
-      // Plain text ang nasa DB (Temporary fix para makapag-login ka)
+      console.log("System detected Plain Text. Comparing...");
       isMatch = (password === user.password);
     }
 
     if (!isMatch) {
+      console.log("❌ Password did not match.");
       return res.status(401).json({ success: false, message: 'Invalid credentials.' });
     }
+
+    console.log("✅ Password matched!");
 
     // 3. Get student profile if student role
     let studentId = null;
@@ -48,19 +56,20 @@ const login = async (req, res) => {
       if (studentRows.length > 0) {
         studentId = studentRows[0].id;
         name = studentRows[0].name;
+        console.log(`🎓 Student profile linked: ${name}`);
       }
     }
 
     // 4. Token generation
-    // Siguraduhin na ang JWT_SECRET at JWT_EXPIRES_IN ay nasa .env mo
-    const payload = { id: user.id, username: user.username, role: user.role, studentId };
     const secret = process.env.JWT_SECRET || 'fallback_secret_key';
     const expires = process.env.JWT_EXPIRES_IN || '1d';
+    const payload = { id: user.id, username: user.username, role: user.role, studentId };
 
     const token = jwt.sign(payload, secret, { expiresIn: expires });
 
     // 5. Success response
-    res.json({
+    console.log("🚀 Login successful. Sending token.");
+    return res.json({
       success: true,
       message: 'Login successful.',
       token,
@@ -74,17 +83,8 @@ const login = async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ success: false, message: 'Server error sa database connection.' });
-  }
-
-  // Sa loob ng authController.js, dagdagan mo ito para makita natin sa logs:
-  console.log("Login Attempt:", username);
-  const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
-  console.log("User found in DB:", rows.length > 0);
-  if (rows.length > 0) {
-    console.log("Password in DB:", rows[0].password);
-    console.log("Password entered:", password);
+    console.error('🔥 Login error:', err);
+    return res.status(500).json({ success: false, message: 'Server error sa database connection.' });
   }
 };
 
