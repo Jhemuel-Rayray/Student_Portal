@@ -282,5 +282,7 @@ module.exports = {
   updateStudent,
   deleteStudent,
   bulkCreateStudents,
-  deleteAllStudents
+  deleteAllStudents,
+  bulkCreateGrades,
+  bulkCreateSchedules,
 };

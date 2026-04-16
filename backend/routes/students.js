@@ -9,8 +9,9 @@ const {
   updateStudent,
   deleteStudent,
   bulkCreateStudents,
-
-  deleteAllStudents // Idagdag ang bagong function dito
+  bulkCreateGrades,
+  bulkCreateSchedules, // Siguraduhing nandito rin ito!
+  deleteAllStudents
 } = require('../controllers/studentController');
 
 router.get('/dashboard', auth, getDashboard);
