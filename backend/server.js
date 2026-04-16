@@ -67,6 +67,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: 'Internal Server Error' });
 });
 
+// Sa server.js
+const authRoutes = require('./routes/auth');
+app.use('/api', authRoutes); // Dito dapat papasok ang /api/login
+
 // Start Server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🚀 Student Portal Server running on http://localhost:${PORT}`);
