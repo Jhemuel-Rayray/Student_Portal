@@ -42,6 +42,11 @@ app.get(/^(?!\/api).*$/, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
+app.post('/api/login', async (req, res) => {
+  console.log("May nag-login:", req.body); // Lalabas dapat ito sa terminal
+  // ... rest of the code
+});
+
 app.listen(PORT, () => {
   console.log(`\n🚀 Student Portal Server running on http://localhost:${PORT}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
