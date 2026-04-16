@@ -1,12 +1,18 @@
 const mysql = require('mysql2');
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 3306,
-  ssl: { rejectUnauthorized: false } // MAHALAGA: Kailangan ito para sa cloud databases
+  host: 'mysql-2b492376-jhemuel-6f3a.aivencloud.com',
+  user: 'avnadmin',
+  password: 'YOUR_AIVEN_PASSWORD',
+  database: 'defaultdb',
+  port: 24856,
+  ssl: {
+    // Ito ang katapat nung ginawa natin sa DBeaver kanina
+    rejectUnauthorized: false
+  },
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
 module.exports = pool.promise();
