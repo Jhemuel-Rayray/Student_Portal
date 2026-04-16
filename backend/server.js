@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-// 1. Route Imports (Dapat minsan lang ito)
+// 1. Route Imports (Dapat ISANG BESES lang idine-declare)
 const authRoutes = require('./routes/auth');
 const studentRoutes = require('./routes/students');
 const gradeRoutes = require('./routes/grades');
@@ -13,20 +13,17 @@ const aiRoutes = require('./routes/ai');
 const chatRoutes = require('./routes/chat');
 
 const app = express();
-
-// 2. Port Handling para sa Render
 const PORT = process.env.PORT || 3000;
 
-// 3. Middleware
+// 2. Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// 4. Serve Frontend Static Files
-// Siguraduhin na tama ang path papunta sa frontend folder mo
+// 3. Serve Frontend Static Files
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// 5. API Routes
+// 4. API Routes
 app.use('/api', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/grades', gradeRoutes);
@@ -35,24 +32,18 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/chat', chatRoutes);
 
-// 6. Health Check
+// 5. Health Check
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Student Portal API is running.', timestamp: new Date() });
 });
 
-// 7. SPA Fallback (Ito ang mag-se-serve ng index.html para sa frontend routes)
+// 6. SPA Fallback
 app.get(/^(?!\/api).*$/, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// 8. Error Handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Something went wrong!' });
-});
-
-// 9. Start Server (Binding sa 0.0.0.0 para sa Render)
+// 7. Start Server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📡 API: http://localhost:${PORT}/api\n`);
+  console.log(`\n🚀 Student Portal Server running on http://localhost:${PORT}`);
+  console.log(`📡 API available at http://localhost:${PORT}/api`);
 });
