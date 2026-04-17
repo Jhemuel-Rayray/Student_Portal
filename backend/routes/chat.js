@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { auth, facultyOnly } = require('../middleware/auth');
-const { sendMessage, getMessages, getConversations } = require('../controllers/chatController');
+const auth = require('../middleware/auth');
+const chatController = require('../controllers/chatController');
 
-router.post('/send', auth, sendMessage);
-router.get('/history/:peerId', auth, getMessages);
-router.get('/conversations', auth, facultyOnly, getConversations);
+router.get('/history/:student_id', auth, chatController.getChatHistory);
+router.post('/send', auth, chatController.sendMessage);
 
 module.exports = router;
