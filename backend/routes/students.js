@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const studentController = require('../controllers/studentController'); // Check mo kung tama ang path
+
 const verifyToken = require('../middleware/auth');
 const {
   getDashboard,
@@ -11,23 +11,24 @@ const {
   deleteStudent,
   bulkCreateStudents,
   bulkCreateGrades,
-  bulkCreateSchedules, // Siguraduhing nandito rin ito!
+  bulkCreateSchedules,
   deleteAllStudents
 } = require('../controllers/studentController');
 
-router.get('/dashboard', verifyToken, studentController.getDashboardData);
-router.get('/profile/:id', auth, getProfile);
-router.get('/', auth, facultyOnly, getAllStudents);
+// Routes
+router.get('/dashboard', verifyToken, getDashboard);
+router.get('/profile/:id', verifyToken, getProfile);
+router.get('/', verifyToken, getAllStudents);
 
-// Bulk Operations
-router.post('/bulk', auth, adminOnly, bulkCreateStudents);
-router.delete('/all', auth, adminOnly, deleteAllStudents);
-router.post('/bulk-grades', auth, adminOnly, bulkCreateGrades);
-router.post('/bulk-schedules', auth, adminOnly, bulkCreateSchedules);// Route para sa Delete All
+// Bulk
+router.post('/bulk', verifyToken, bulkCreateStudents);
+router.delete('/all', verifyToken, deleteAllStudents);
+router.post('/bulk-grades', verifyToken, bulkCreateGrades);
+router.post('/bulk-schedules', verifyToken, bulkCreateSchedules);
 
-// Individual Operations
-router.post('/', auth, adminOnly, createStudent);
-router.put('/:id', auth, facultyOnly, updateStudent);
-router.delete('/:id', auth, adminOnly, deleteStudent);
+// CRUD
+router.post('/', verifyToken, createStudent);
+router.put('/:id', verifyToken, updateStudent);
+router.delete('/:id', verifyToken, deleteStudent);
 
 module.exports = router;
