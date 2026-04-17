@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-// TAMA: Import as a single function dahil 'module.exports = verifyToken' ang nasa auth.js
+// 1. Siguraduhin na ang auth middleware path ay tama
 const auth = require('../middleware/auth');
 
-// TAMA: Siguraduhin na 'gradesController' (may S) ang filename
-// Kung ang file name mo ay gradesController.js (may 's')
-const { getGrades, createGrade, updateGrade, deleteGrade } = require('backend/controllers/gradesController');
-// Routes
+// 2. TANGGALIN ang 's' sa gradesController para maging 'gradeController'
+// Dahil 'gradeController.js' ang filename mo
+const { getGrades, createGrade, updateGrade, deleteGrade } = require('../controllers/gradeController');
+
 router.get('/:student_id', auth, getGrades);
 router.post('/', auth, createGrade);
 router.put('/:id', auth, updateGrade);
