@@ -2017,3 +2017,64 @@ body::before {
     font-size: 1.1rem;
   }
 }
+
+/* --- Desktop First (Default Style) --- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* 3 columns sa laptop */
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* --- 📱 MOBILE RESPONSIVE (Media Query) --- */
+@media screen and (max-width: 768px) {
+
+  /* 1. Dashboard Layout */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    /* Magiging 1 column na lang sa phone */
+    padding: 10px;
+  }
+
+  /* 2. Text and Headers */
+  h1 {
+    font-size: 1.5rem;
+    /* Paliitin ang title para kumasya */
+    text-align: center;
+  }
+
+  /* 3. Navigation/Buttons */
+  .nav-bar {
+    flex-direction: column;
+    /* Stack ang menu items pababa */
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+    /* Full width buttons para madaling mapindot */
+    padding: 15px;
+    /* Touch-friendly size */
+    font-size: 16px;
+    /* Para hindi mag-zoom ang iPhone pag click */
+  }
+
+  /* 4. Tables (Grades/Schedules) */
+  .table-container {
+    overflow-x: auto;
+    /* Para pwedeng i-swipe pakaliwa/pakanan ang table */
+  }
+
+  table {
+    min-width: 600px;
+    /* Force scroll para hindi mag-overlap ang text */
+  }
+}

@@ -36,8 +36,7 @@ const studentRoutes = safeRequire('./routes/students');
 const gradeRoutes = safeRequire('./routes/grades');
 const scheduleRoutes = safeRequire('./routes/schedules');
 const announcementRoutes = safeRequire('./routes/announcements');
-const aiRoutes = safeRequire('./routes/ai');
-const chatRoutes = safeRequire('./routes/chat');
+
 
 // 4. API ROUTES (With null check)
 if (authRoutes) app.use('/api', authRoutes);
@@ -45,8 +44,6 @@ if (studentRoutes) app.use('/api/students', studentRoutes);
 if (gradeRoutes) app.use('/api/grades', gradeRoutes);
 if (scheduleRoutes) app.use('/api/schedule', scheduleRoutes);
 if (announcementRoutes) app.use('/api/announcements', announcementRoutes);
-if (aiRoutes) app.use('/api/ai', aiRoutes);
-if (chatRoutes) app.use('/api/chat', chatRoutes);
 
 // 5. HEALTH CHECK
 app.get('/api/health', (req, res) => {
