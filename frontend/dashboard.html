@@ -3,17 +3,87 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard — Student Portal</title>
   <meta name="description"
     content="Your student dashboard — view grades summary, upcoming schedules, and latest announcements." />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* CSS OVERRIDES PARA SA MOBILE (Ilagay mo ito sa style.css o dito) */
+    @media screen and (max-width: 768px) {
+
+      /* 1. Dashboard Grid - Gawing single column */
+      .dash-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+
+      /* 2. Stats Row - Gawing scrollable horizontal o stack */
+      .stat-grid {
+        grid-template-columns: 1fr !important;
+        /* Stack vertically */
+        gap: 12px !important;
+      }
+
+      /* 3. Sidebar Behavior - I-hide pag mobile unless i-toggle */
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        /* Hide outside */
+        transition: 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      /* 4. Overlay kapag bukas ang sidebar sa mobile */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
+      /* 5. Main Content padding adjustment */
+      .main-content {
+        margin-left: 0 !important;
+        padding: 10px !important;
+      }
+
+      /* 6. Topbar adjustment */
+      .topbar {
+        padding: 10px 15px !important;
+      }
+
+      .topbar-title {
+        font-size: 18px !important;
+      }
+
+      .topbar-breadcrumb {
+        display: none;
+      }
+
+      /* Itago ang breadcrumb sa maliit na screen */
+    }
+  </style>
 </head>
 
 <body>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
   <div class="app-layout">
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo">
         <img src="img/logo.png" alt="Neo-Zenith Logo" class="sidebar-logo-icon"
@@ -51,7 +121,7 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div class="sidebar-user" onclick="logout()">
+        <div class="sidebar-user" onclick="logout()" style="cursor: pointer;">
           <div class="sidebar-avatar" id="sidebarAvatar">?</div>
           <div class="sidebar-user-info">
             <div class="sidebar-user-name" id="sidebarUsername">Loading...</div>
@@ -62,10 +132,9 @@
       </div>
     </aside>
 
-    <!-- Main -->
     <div class="main-content">
       <header class="topbar">
-        <div class="flex items-center gap-12">
+        <div class="flex items-center gap-12" style="display: flex; align-items: center; gap: 12px;">
           <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
             <i class="fa fa-bars"></i>
           </button>
@@ -74,7 +143,7 @@
             <div class="topbar-breadcrumb">Welcome back, <span id="topGreeting">Student</span> 👋</div>
           </div>
         </div>
-        <div class="topbar-right">
+        <div class="topbar-right" style="display: flex; gap: 15px;">
           <div class="topbar-btn" title="Notifications">
             <i class="fa fa-bell"></i>
             <span class="notif-dot"></span>
@@ -86,8 +155,7 @@
       </header>
 
       <main class="page-content">
-        <!-- Stats Row -->
-        <div class="stat-grid">
+        <div class="stat-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
           <div class="stat-card blue">
             <div class="stat-icon"><i class="fa fa-graduation-cap"></i></div>
             <div class="stat-value" id="statGPA">0.00</div>
@@ -108,31 +176,26 @@
           </div>
         </div>
 
-        <!-- AI Mentor Section -->
-        <div class="glass-card fade-in" style="animation-delay: 0.2s">
+        <div class="glass-card fade-in" style="margin-top: 24px;">
           <div class="card-header">
             <div class="card-title">
-              <div class="card-title-icon" style="background:rgba(14,165,233,0.12);color:var(--neon-blue)">✨</div>
+              <div class="card-title-icon" style="background:rgba(14,165,233,0.12);color:#0ea5e9">✨</div>
               Celestial AI Mentor
             </div>
             <div class="badge badge-blue">Direct Neural Link</div>
           </div>
           <div class="card-body">
-            <p id="aiMotivationText"
-              style="font-size: 16px; line-height: 1.6; font-style: italic; color: var(--text-primary)">
+            <p id="aiMotivationText" style="font-size: 16px; line-height: 1.6; font-style: italic;">
               Initiating AI Mentor synchronization...
             </p>
           </div>
           <div class="card-footer" style="padding: 12px 24px; border:none">
-            <span class="text-muted" style="font-size:11px">Performance-based suggestions generated by Neo-Zenith
-              AI</span>
+            <span class="text-muted" style="font-size:11px">Performance-based suggestions by Neo-Zenith AI</span>
           </div>
         </div>
 
-        <!-- Grid: Student Info + Announcements -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px" class="dash-grid">
-          <!-- Student Info Card -->
-          <div class="glass-card fade-in" style="animation-delay:0.2s">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top: 24px;" class="dash-grid">
+          <div class="glass-card">
             <div class="card-header">
               <div class="card-title">
                 <div class="card-title-icon" style="background:rgba(124,58,237,0.12);color:#a78bfa">🎓</div>
@@ -147,11 +210,10 @@
             </div>
           </div>
 
-          <!-- Latest Announcements -->
-          <div class="glass-card fade-in" style="animation-delay:0.3s">
+          <div class="glass-card">
             <div class="card-header">
               <div class="card-title">
-                <div class="card-title-icon" style="background:rgba(0,212,255,0.12);color:var(--neon-blue)">📣</div>
+                <div class="card-title-icon" style="background:rgba(0,212,255,0.12);color:#00d4ff">📣</div>
                 Latest Announcements
               </div>
               <a href="announcements.html" class="btn btn-ghost btn-sm">View All</a>
@@ -166,11 +228,10 @@
           </div>
         </div>
 
-        <!-- Today's Schedule -->
-        <div class="glass-card fade-in" style="animation-delay:0.4s">
+        <div class="glass-card fade-in" style="margin-top: 24px;">
           <div class="card-header">
             <div class="card-title">
-              <div class="card-title-icon" style="background:rgba(6,255,212,0.12);color:var(--neon-cyan)">🗓️</div>
+              <div class="card-title-icon" style="background:rgba(6,255,212,0.12);color:#06ffd4">🗓️</div>
               Today's Schedule
             </div>
             <a href="schedule.html" class="btn btn-ghost btn-sm">Full Schedule</a>
@@ -186,6 +247,16 @@
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('show');
+    }
+  </script>
+
   <script src="js/auth.js"></script>
   <script src="js/dashboard.js"></script>
   <script src="js/support-widget.js"></script>
