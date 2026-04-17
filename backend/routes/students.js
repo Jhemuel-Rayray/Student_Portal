@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { auth, adminOnly, facultyOnly } = require('../middleware/auth');
+const studentController = require('../controllers/studentController'); // Check mo kung tama ang path
+const verifyToken = require('../middleware/auth');
 const {
   getDashboard,
   getProfile,
@@ -14,7 +15,7 @@ const {
   deleteAllStudents
 } = require('../controllers/studentController');
 
-router.get('/dashboard', auth, getDashboard);
+router.get('/dashboard', verifyToken, studentController.getDashboardData);
 router.get('/profile/:id', auth, getProfile);
 router.get('/', auth, facultyOnly, getAllStudents);
 
