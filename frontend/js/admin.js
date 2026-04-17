@@ -558,15 +558,12 @@ async function handleDeleteAllStudents() {
     // Kunin ang token (naka-depende kung paano ito kinuha sa auth.js mo)
     const token = localStorage.getItem('token');
 
-    const response = await fetch('http://localhost:3000/api/students/all', {
+    const result = await apiCall('/students/all', {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`
       }
     });
-
-    const result = await response.json();
 
     if (result.success) {
       // Gumamit ng toast message kung meron ka nito sa admin.js, kung wala, alert na lang
