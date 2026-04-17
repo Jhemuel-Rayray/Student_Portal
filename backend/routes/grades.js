@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
-
-// Siguraduhin na 'gradeController.js' ang filename (walang s)
+const auth = require('../middleware/auth'); // TAMA: No curly braces
 const gradeController = require('../controllers/gradeController');
 
 router.get('/:student_id', auth, gradeController.getGrades);
