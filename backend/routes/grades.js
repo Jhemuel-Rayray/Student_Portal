@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 
 // TAMA: Siguraduhin na 'gradesController' (may S) ang filename
 // Kung ang file name mo ay gradesController.js (may 's')
-const { getGrades, createGrade, updateGrade, deleteGrade } = require('../controllers/gradesController');
+const { getGrades, createGrade, updateGrade, deleteGrade } = require('backend/controllers/gradesController');
 // Routes
 router.get('/:student_id', auth, getGrades);
 router.post('/', auth, createGrade);
