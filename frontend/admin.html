@@ -9,6 +9,74 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    /* CSS OVERRIDES PARA SA MOBILE (Ilagay mo ito sa style.css o dito) */
+    @media screen and (max-width: 768px) {
+
+      /* 1. Dashboard Grid - Gawing single column */
+      .dash-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+
+      /* 2. Stats Row - Gawing scrollable horizontal o stack */
+      .stat-grid {
+        grid-template-columns: 1fr !important;
+        /* Stack vertically */
+        gap: 12px !important;
+      }
+
+      /* 3. Sidebar Behavior - I-hide pag mobile unless i-toggle */
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        /* Hide outside */
+        transition: 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      /* 4. Overlay kapag bukas ang sidebar sa mobile */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
+      /* 5. Main Content padding adjustment */
+      .main-content {
+        margin-left: 0 !important;
+        padding: 10px !important;
+      }
+
+      /* 6. Topbar adjustment */
+      .topbar {
+        padding: 10px 15px !important;
+      }
+
+      .topbar-title {
+        font-size: 18px !important;
+      }
+
+      .topbar-breadcrumb {
+        display: none;
+      }
+
+      /* Itago ang breadcrumb sa maliit na screen */
+    }
+  </style>
 </head>
 
 <body>
